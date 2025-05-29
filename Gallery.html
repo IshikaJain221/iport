@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CollegeTips Gallery</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Arial, sans-serif;
+    }
+
+    /* Theme variables */
+    :root {
+      --background: linear-gradient(180deg, #e6f0fa, #fefefe);
+      --text-color: #333;
+      --header-bg: linear-gradient(to right, #006699, #00cfff);
+      --header-text: white;
+      --filter-bg: rgba(255, 255, 255, 0.9);
+      --filter-shadow: rgba(0, 0, 0, 0.1);
+      --flip-front-bg: linear-gradient(to right, #006699, #00cfff);
+      --flip-back-bg: #0077b6;
+      --photo-shadow: rgba(0, 0, 0, 0.1);
+      --zoom-btn-bg: white;
+      --zoom-btn-hover: #e6f0fa;
+      --wave1-fill: #006699;
+      --wave2-fill: #0099cc;
+      --wave3-fill: #00cfff;
+    }
+
+    body.dark-mode {
+      --background: linear-gradient(180deg, #1c2526, #2e2e2e);
+      --text-color: #e0e0e0;
+      --header-bg: linear-gradient(to right, #003366, #006699);
+      --header-text: #e0e0e0;
+      --filter-bg: rgba(30, 30, 30, 0.9);
+      --filter-shadow: rgba(255, 255, 255, 0.1);
+      --flip-front-bg: linear-gradient(to right, #003366, #006699);
+      --flip-back-bg: #004466;
+      --photo-shadow: rgba(255, 255, 255, 0.1);
+      --zoom-btn-bg: #333;
+      --zoom-btn-hover: #555;
+      --wave1-fill: #003366;
+      --wave2-fill: #004466;
+      --wave3-fill: #006699;
+    }
+
+    body {
+      background: var(--background);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    /* Header */
+    .header {
+      background: var(--header-bg);
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    .header h1 {
+      color: var(--header-text);
+      font-size: 3rem;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      margin: 0;
+      display: inline-block;
+    }
+
+    .header h1 span {
+      display: inline-block;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* Category Scroll (Flip Cards) */
+    .category-scroll {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      padding: 20px;
+      flex-wrap: wrap;
+      background: var(--filter-bg);
+      box-shadow: 0 2px 4px var(--filter-shadow);
+    }
+
+    .flip-card {
+      width: 200px;
+      height: 120px;
+      perspective: 1000px;
+      cursor: pointer;
+    }
+
+    .flip-link {
+      text-decoration: none;
+    }
+
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s ease-in-out;
+      transform-style: preserve-3d;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+    }
+
+    .flip-card:hover .flip-card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .flip-card-front,
+    .flip-card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+    }
+
+    .flip-card-front {
+      background: var(--flip-front-bg);
+      color: var(--header-text);
+      font-size: 1.2rem;
+      text-transform: uppercase;
+      font-weight: bold;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    .flip-card-back {
+      background: var(--flip-back-bg);
+      color: var(--header-text);
+      transform: rotateY(180deg);
+      font-size: 1rem;
+      padding: 10px;
+      text-align: center;
+    }
+
+    /* Gallery */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+      flex-grow: 1;
+    }
+
+    .photo {
+      display: block;
+    }
+
+    .photo img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px var(--photo-shadow);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+
+    .photo img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 16px var(--photo-shadow);
+    }
+
+    /* Wave Footer */
+    .wave-footer {
+      position: relative;
+      width: 100%;
+      height: 150px;
+      overflow: hidden;
+      margin-top: auto;
+      z-index: 0;
+    }
+
+    .wave {
+      position: absolute;
+      bottom: 0;
+      width: 200%;
+      height: 100%;
+      background-repeat: repeat-x;
+      background-size: contain;
+      animation: waveMove linear infinite;
+    }
+
+    .wave1 {
+      background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg"><path fill="%23006699" d="M0,160 C150,200 350,120 500,160 C650,200 850,120 1200,160 L1200,300 L0,300 Z"/></svg>');
+      opacity: 0.5;
+      animation-duration: 30s;
+    }
+
+    body.dark-mode .wave1 {
+      background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg"><path fill="%23003366" d="M0,160 C150,200 350,120 500,160 C650,200 850,120 1200,160 L1200,300 L0,300 Z"/></svg>');
+    }
+
+    .wave2 {
+      background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg"><path fill="%230099cc" d="M0,180 C200,230 300,100 500,150 C700,200 800,140 1200,180 L1200,300 L0,300 Z"/></svg>');
+      opacity: 0.6;
+      animation-duration: 20s;
+    }
+
+    body.dark-mode .wave2 {
+      background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg"><path fill="%23004466" d="M0,180 C200,230 300,100 500,150 C700,200 800,140 1200,180 L1200,300 L0,300 Z"/></svg>');
+    }
+
+    .wave3 {
+      background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg"><path fill="%2300cfff" d="M0,200 C250,250 300,150 500,180 C700,210 200,150 1200,200 L1200,300 L0,300 Z"/></svg>');
+      opacity: 0.7;
+      animation-duration: 10s;
+    }
+
+    body.dark-mode .wave3 {
+      background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg"><path fill="%23006699" d="M0,200 C250,250 300,150 500,180 C700,210 200,150 1200,200 L1200,300 L0,300 Z"/></svg>');
+    }
+
+    @keyframes waveMove {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    /* Lightbox */
+    .lightbox {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease;
+    }
+
+    .lightbox.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .lightbox-img {
+      max-width: 90%;
+      max-height: 80%;
+      border-radius: 10px;
+      transform: scale(1);
+      transition: transform 0.3s ease;
+    }
+
+    .close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 2rem;
+      color: white;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .zoom-controls {
+      position: absolute;
+      bottom: 40px;
+      display: flex;
+      gap: 15px;
+      z-index: 1000;
+    }
+
+    .zoom-controls button {
+      background: var(--zoom-btn-bg);
+      color: #333;
+      font-size: 1.5rem;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .zoom-controls button:hover {
+      background: var(--zoom-btn-hover);
+      transform: scale(1.1);
+    }
+
+    .zoom-controls button:active {
+      transform: scale(0.95);
+    }
+
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      z-index: 10000;
+      color: var(--text-color);
+      transition: transform 0.3s ease;
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.2);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 2rem;
+      }
+
+      .flip-card {
+        width: 150px;
+        height: 90px;
+      }
+
+      .flip-card-front {
+        font-size: 1rem;
+      }
+
+      .flip-card-back {
+        font-size: 0.9rem;
+      }
+
+      .gallery {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      }
+
+      .wave-footer {
+        height: 100px;
+      }
+
+      .wave {
+        height: 100%;
+      }
+
+      .lightbox-img {
+        max-width: 95%;
+        max-height: 70%;
+      }
+
+      .zoom-controls button {
+        padding: 10px 14px;
+        font-size: 1.2rem;
+      }
+
+      .theme-toggle {
+        font-size: 20px;
+        top: 15px;
+        right: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="theme-toggle" aria-label="Toggle theme">☀️</button>
+
+  <!-- Header -->
+  <div class="header">
+    <h1 class="title">
+      <span>G</span><span>A</span><span>L</span><span>L</span><span>E</span><span>R</span><span>Y</span>
+    </h1>
+  </div>
+
+  <!-- Category Scroll (Flip Cards) -->
+  <div class="category-scroll">
+    <!-- ALL (Filter on current page) -->
+    <div class="flip-card" data-category="all">
+      <div class="flip-card-inner">
+        <div class="flip-card-front"><h3>ALL</h3></div>
+        <div class="flip-card-back"><p>View all images</p></div>
+      </div>
+    </div>
+
+    <!-- TEAM VIBES (Redirect to team.html) -->
+    <a href="team.html" class="flip-link">
+      <div class="flip-card">
+        <div class="flip-card-inner">
+          <div class="flip-card-front"><h3>TEAM VIBES</h3></div>
+          <div class="flip-card-back"><p>Explore team moments</p></div>
+        </div>
+      </div>
+    </a>
+
+    <!-- CREATIVE CAMPAIGNS (Redirect to creative.html) -->
+    <a href="creative.html" class="flip-link">
+      <div class="flip-card">
+        <div class="flip-card-inner">
+          <div class="flip-card-front"><h3>CREATIVE CAMPAIGNS</h3></div>
+          <div class="flip-card-back"><p>Discover creative works</p></div>
+        </div>
+      </div>
+    </a>
+
+    <!-- WORK HARD PLAY HARD (Redirect to fun.html) -->
+    <a href="fun.html" class="flip-link">
+      <div class="flip-card">
+        <div class="flip-card-inner">
+          <div class="flip-card-front"><h3>WORK HARD PLAY HARD</h3></div>
+          <div class="flip-card-back"><p>Fun times await</p></div>
+        </div>
+      </div>
+    </a>
+
+    <!-- BEHIND THE SCENES (Redirect to bts.html) -->
+    <a href="bts.html" class="flip-link">
+      <div class="flip-card">
+        <div class="flip-card-inner">
+          <div class="flip-card-front"><h3>BEHIND THE SCENES</h3></div>
+          <div class="flip-card-back"><p>Peek behind the curtain</p></div>
+        </div>
+      </div>
+    </a>
+
+    <!-- HOME (Redirect to index.html) -->
+    <a href="index.html" class="flip-link">
+      <div class="flip-card">
+        <div class="flip-card-inner">
+          <div class="flip-card-front"><h3>HOME</h3></div>
+          <div class="flip-card-back"><p>Back to Home</p></div>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <!-- Gallery -->
+  <div class="gallery">
+    <!-- Creative -->
+    <div class="photo creative"><img src="campaign2.jpg.png" alt="Creative Campaign"></div>
+    <div class="photo creative"><img src="campaign3.jpg.png" alt="Creative Campaign"></div>
+    <div class="photo creative"><img src="campaign4.jpg.png" alt="Creative Campaign"></div>
+    <div class="photo creative"><img src="campaigns.jpg.png" alt="Creative Campaign"></div>
+    <!-- Team -->
+    <div class="photo team"><img src="team1.jpg.png" alt="Team Vibes"></div>
+    <div class="photo team"><img src="team2.jpg.png" alt="Team Vibes"></div>
+    <div class="photo team"><img src="team.jpg.png" alt="Team Vibes"></div>
+    <div class="photo team"><img src="team3.jpg.png" alt="Team Vibes"></div>
+    <div class="photo team"><img src="teamvibes55.jpg.png" alt="Team Vibes"></div>
+    <!-- Fun -->
+    <div class="photo fun"><img src="whph1.jpg.png" alt="Work Hard Play Hard"></div>
+    <div class="photo fun"><img src="whph2.jpg.png" alt="Work Hard Play Hard"></div>
+    <div class="photo fun"><img src="whph44.png" alt="Work Hard Play Hard"></div>
+    <div class="photo fun"><img src="whph66.png" alt="Work Hard Play Hard"></div>
+    <!-- BTS -->
+    <div class="photo bts"><img src="bts1.png" alt="BTS 1"></div>
+    <div class="photo bts"><img src="bts2.png" alt="BTS 2"></div>
+    <div class="photo bts"><img src="bts3.png" alt="BTS 3"></div>
+    <div class="photo bts"><img src="bts4.png" alt="BTS 4"></div>
+    <div class="photo bts"><img src="bts5.png" alt="BTS 5"></div>
+    <div class="photo bts"><img src="bts6.png" alt="BTS 6"></div>
+    <div class="photo bts"><img src="bts7.png" alt="BTS 7"></div>
+  </div>
+
+  <!-- Wave Footer -->
+  <div class="wave-footer">
+    <div class="wave wave1"></div>
+    <div class="wave wave2"></div>
+    <div class="wave wave3"></div>
+  </div>
+
+  <!-- Lightbox -->
+  <div id="lightbox" class="lightbox hidden">
+    <span class="close">×</span>
+    <img class="lightbox-img" src="" alt="Zoomed Image" />
+    <div class="zoom-controls">
+      <button id="zoom-in">+</button>
+      <button id="zoom-out">-</button>
+    </div>
+  </div>
+
+  <script>
+    // Bouncing header animation
+    document.addEventListener("DOMContentLoaded", function () {
+      const heading = document.querySelector(".header h1");
+      const letters = heading.textContent.split("");
+      heading.innerHTML = letters
+        .map(
+          (letter, index) =>
+            `<span style="animation-delay: ${index * 0.1}s;">${letter}</span>`
+        )
+        .join("");
+
+      // Theme toggle
+      const toggleButton = document.querySelector('.theme-toggle');
+      const body = document.body;
+      if (localStorage.getItem('theme') === 'dark') {
+        body.classList.add('dark-mode');
+        toggleButton.textContent = '🌙';
+      } else {
+        toggleButton.textContent = '☀️';
+      }
+      toggleButton.addEventListener('click', () => {
+        body.classList.toggle('dark-mode');
+        if (body.classList.contains('dark-mode')) {
+          toggleButton.textContent = '🌙';
+          localStorage.setItem('theme', 'dark');
+        } else {
+          toggleButton.textContent = '☀️';
+          localStorage.setItem('theme', 'light');
+        }
+      });
+    });
+
+    // Filter functionality
+    document.querySelectorAll('.flip-card').forEach(card => {
+      card.addEventListener('click', (e) => {
+        if (card.dataset.category) {
+          e.preventDefault();
+          const category = card.dataset.category;
+          document.querySelectorAll('.photo').forEach(photo => {
+            if (category === 'all' || photo.classList.contains(category)) {
+              photo.style.display = 'block';
+            } else {
+              photo.style.display = 'none';
+            }
+          });
+          // Reset all flip cards to front
+          document.querySelectorAll('.flip-card-inner').forEach(inner => {
+            inner.style.transform = 'rotateY(0deg)';
+          });
+        }
+      });
+    });
+
+    // Initialize gallery to show all images
+    document.addEventListener("DOMContentLoaded", function () {
+      document.querySelectorAll('.photo').forEach(photo => {
+        photo.style.display = 'block';
+      });
+    });
+
+    // Lightbox functionality
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.querySelector('.lightbox-img');
+    const closeBtn = document.querySelector('.close');
+    const zoomInBtn = document.getElementById('zoom-in');
+    const zoomOutBtn = document.getElementById('zoom-out');
+    let zoomLevel = 1;
+
+    // Open lightbox on image click
+    document.querySelectorAll('.photo img').forEach(img => {
+      img.addEventListener('click', () => {
+        try {
+          lightboxImg.src = img.src;
+          lightbox.classList.add('active');
+          zoomLevel = 1;
+          lightboxImg.style.transform = `scale(${zoomLevel})`;
+          console.log('Lightbox opened with image:', img.src);
+        } catch (error) {
+          console.error('Error opening lightbox:', error);
+        }
+      });
+    });
+
+    // Close lightbox
+    closeBtn.addEventListener('click', () => {
+      lightbox.classList.remove('active');
+      zoomLevel = 1;
+      lightboxImg.style.transform = `scale(1)`;
+      console.log('Lightbox closed');
+    });
+
+    // Click outside to close
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) {
+        lightbox.classList.remove('active');
+        zoomLevel = 1;
+        lightboxImg.style.transform = `scale(1)`;
+        console.log('Lightbox closed via background click');
+      }
+    });
+
+    // Close with Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+        lightbox.classList.remove('active');
+        zoomLevel = 1;
+        lightboxImg.style.transform = `scale(1)`;
+        console.log('Lightbox closed via Escape key');
+      }
+    });
+
+    // Zoom in
+    zoomInBtn.addEventListener('click', () => {
+      zoomLevel = Math.min(zoomLevel + 0.2, 2);
+      lightboxImg.style.transform = `scale(${zoomLevel})`;
+      console.log('Zoomed in to level:', zoomLevel);
+    });
+
+    // Zoom out
+    zoomOutBtn.addEventListener('click', () => {
+      zoomLevel = Math.max(0.5, zoomLevel - 0.2);
+      lightboxImg.style.transform = `scale(${zoomLevel})`;
+      console.log('Zoomed out to level:', zoomLevel);
+    });
+  </script>
+</body>
+</html>

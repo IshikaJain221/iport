@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ishika's Sparkly Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Quicksand', 'Poppins', sans-serif;
+      background: #ffe6f2;
+      color: #333;
+      overflow-x: hidden;
+      transition: background 0.3s ease, color 0.3s ease; /* Smooth transition for dark mode */
+    }
+
+    /* Dark mode styles */
+    body.dark-mode {
+      background: #1a0d1a; /* Deep purple-black */
+      color: #f0c6e1; /* Light pinkish text */
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background-color: #ff99cc;
+      color: black;
+      position: relative;
+      z-index: 10;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    body.dark-mode header {
+      background-color: #4b1c46; /* Darker purple */
+      color: #f0c6e1;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: black;
+      transition: color 0.3s ease;
+    }
+
+    body.dark-mode .logo {
+      color: #f0c6e1;
+    }
+
+    nav a {
+      margin: 0 1rem;
+      text-decoration: none;
+      color: black;
+      font-weight: bold;
+      transition: color 0.3s ease;
+    }
+
+    body.dark-mode nav a {
+      color: #f0c6e1;
+    }
+
+    .toggle-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .toggle-container label {
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 5rem 2rem;
+      background: linear-gradient(to bottom, #ffc0cb 60%, #ffccff);
+      color: black;
+      position: relative;
+      min-height: 500px;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    body.dark-mode .hero {
+      background: linear-gradient(to bottom, #2e1a2e 60%, #4b1c46);
+      color: #f0c6e1;
+    }
+
+    .hero h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .hero p {
+      max-width: 700px;
+      margin: 0 auto 2rem;
+      line-height: 1.8;
+      font-size: 1.1rem;
+    }
+
+    .btn {
+      display: inline-block;
+      background-color: #ff66b2;
+      color: white;
+      padding: 0.8rem 1.5rem;
+      border-radius: 30px;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+    }
+
+    body.dark-mode .btn {
+      background-color: #d9469f; /* Slightly darker pink */
+    }
+
+    .btn:hover {
+      background-color: #ff3399;
+    }
+
+    body.dark-mode .btn:hover {
+      background-color: #c0398b;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background-color: #ff99cc;
+      font-size: 0.9rem;
+      color: black;
+      position: relative;
+      z-index: 10;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    body.dark-mode footer {
+      background-color: #4b1c46;
+      color: #f0c6e1;
+    }
+
+    /* Wave styling for top of hero section */
+    .wave-container {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 300px;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .wave {
+      position: absolute;
+      width: 200%;
+      height: 100%;
+      bottom: 0;
+      background-repeat: repeat-x;
+      background-size: 100% 100%;
+      animation: waveMove 12s infinite linear;
+      box-shadow: 0 4px 10px rgba(255, 105, 180, 0.3);
+      transition: box-shadow 0.3s ease;
+    }
+
+    body.dark-mode .wave {
+      box-shadow: 0 4px 10px rgba(147, 51, 234, 0.3); /* Purple glow in dark mode */
+    }
+
+    .wave1 {
+      background: linear-gradient(to bottom, #ffccff 50%, #ffe6f2);
+      z-index: 3;
+      opacity: 1;
+    }
+
+    body.dark-mode .wave1 {
+      background: linear-gradient(to bottom, #4b1c46 50%, #2e1a2e);
+    }
+
+    .wave2 {
+      background: linear-gradient(to bottom, #ff99cc 50%, #ffccff);
+      z-index: 2;
+      opacity: 0.8;
+    }
+
+    body.dark-mode .wave2 {
+      background: linear-gradient(to bottom, #6b2d5c 50%, #4b1c46);
+    }
+
+    .wave3 {
+      background: linear-gradient(to bottom, #FFC0CB 60%, #ffe6f2);
+      z-index: 1;
+      opacity: 0.6;
+    }
+
+    body.dark-mode .wave3 {
+      background: linear-gradient(to bottom, #8a3e7a 60%, #2e1a2e);
+    }
+
+    @keyframes waveMove {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* Hero content styling */
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 3rem 2rem;
+      border-radius: 15px;
+      margin: 0 auto;
+      max-width: 800px;
+      border: none;
+      transition: background 0.3s ease;
+    }
+
+    body.dark-mode .hero-content {
+      background: rgba(46, 26, 46, 0.9); /* Darker background in dark mode */
+    }
+
+    /* Wavy shape at the top of the container, now on .hero */
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 130px;
+      left: 0;
+      width: 400%;
+      height: 50px;
+      background: linear-gradient(to bottom, #ff99cc 50%, transparent);
+      animation: flowingWave 6s infinite ease-in-out;
+      z-index: 0;
+      transition: background 0.3s ease;
+    }
+
+    body.dark-mode .hero::before {
+      background: linear-gradient(to bottom, #6b2d5c 50%, transparent);
+    }
+
+    /* Wavy shape at the bottom of the container, now on .hero */
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 60px;
+      left: 0;
+      width: 400%;
+      height: 50px;
+      background: linear-gradient(to top, #ff99cc 50%, transparent);
+      animation: flowingWave 6s infinite ease-in-out;
+      z-index: 0;
+      transition: background 0.3s ease;
+    }
+
+    body.dark-mode .hero::after {
+      background: linear-gradient(to top, #6b2d5c 50%, transparent);
+    }
+
+    /* Animation for flowing wave effect */
+    @keyframes flowingWave {
+      0% {
+        transform: translateX(0);
+        clip-path: polygon(0 0, 10% 50%, 20% 0, 30% 50%, 40% 0, 50% 50%, 60% 0, 70% 50%, 80% 0, 90% 50%, 100% 0, 100% 100%, 0 100%);
+      }
+      50% {
+        transform: translateX(-50%);
+        clip-path: polygon(0 50%, 10% 0, 20% 50%, 30% 0, 40% 50%, 50% 0, 60% 50%, 70% 0, 80% 50%, 90% 0, 100% 50%, 100% 100%, 0 100%);
+      }
+      100% {
+        transform: translateX(-100%);
+        clip-path: polygon(0 0, 10% 50%, 20% 0, 30% 50%, 40% 0, 50% 50%, 60% 0, 70% 50%, 80% 0, 90% 50%, 100% 0, 100% 100%, 0 100%);
+      }
+    }
+
+    /* Wave at the bottom of hero section */
+    .wave-bottom {
+      position: relative;
+      height: 150px;
+      background: linear-gradient(to bottom, #ffccff 50%, #ffe6f2);
+      z-index: 0;
+      transition: background 0.3s ease;
+    }
+
+    body.dark-mode .wave-bottom {
+      background: linear-gradient(to bottom, #4b1c46 50%, #2e1a2e);
+    }
+
+    .wave-bottom::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 200%;
+      height: 100%;
+      background: linear-gradient(to bottom, #ff99cc 50%, #ffe6f2);
+      background-size: 100% 100%;
+      animation: waveMove 12s linear infinite;
+      box-shadow: 0 4px 10px rgba(255, 105, 180, 0.3);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    body.dark-mode .wave-bottom::before {
+      background: linear-gradient(to bottom, #6b2d5c 50%, #2e1a2e);
+      box-shadow: 0 4px 10px rgba(147, 51, 234, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 class="logo">✨ Ishika ✨</h1>
+    <nav>
+      <a href="index1.html">Home</a>
+      <a href="resume.html">Projects</a>
+      <a href="about.html">About</a>
+      <a href="resume.html">Resume</a>
+      <a href="index.html">Gallery work!</a>
+      <a href="#">Contact</a>
+    </nav>
+    <div class="toggle-container">
+      <input type="checkbox" id="toggle-mode">
+      <label for="toggle-mode" id="toggle-label">🌙</label>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="wave-container">
+      <div class="wave wave3"></div>
+      <div class="wave wave2"></div>
+      <div class="wave wave1"></div>
+    </div>
+    <div class="hero-content">
+      <h2>Hi! I'm Ishika 💻</h2>
+      <p>Hey there! I’m Ishika Jain — a second-year developer with a thing for building aesthetic, animated, and scroll-worthy digital experiences. I believe code should not only work but sparkle ✨<br><br>
+      Whether I’m crafting quirky skits for college, debugging linked lists with chai in hand, or building intelligent tools like Career Quest (a binary-tree powered career guide), I bring a mix of creativity, clarity, and that "let’s-make-this-fun" energy to every project I touch.<br><br>
+      🌸 I blend logic with vibes — merging clean code with girly-girly aesthetics and smooth animations.<br>
+      🧠 I’ve built stuff like: CaféConnect and Career Quest<br>
+      🎭 I’m not just a dev—I’m a storyteller, designer, and creative soul with experience writing scripts, managing stalls, and anchoring events.<br>
+      🌗 I code in the dark...mode, of course.</p>
+      <a href="https://www.linkedin.com/in/ishika-jain-520a62232/" target="_blank" class="btn">Let’s Connect ✨</a>
+    </div>
+  </section>
+
+  <div class="wave-bottom"></div>
+
+  <footer>
+    <p>🌸 Made with love by Ishika | 2025 🌸</p>
+  </footer>
+
+  <script>
+    // Dark mode toggle functionality
+    const toggle = document.getElementById('toggle-mode');
+    const toggleLabel = document.getElementById('toggle-label');
+    const body = document.body;
+
+    const savedMode = localStorage.getItem('darkMode');
+    if (savedMode === 'enabled') {
+      body.classList.add('dark-mode');
+      toggle.checked = true;
+      toggleLabel.textContent = '☀️'; // Sun for dark mode (to switch back to light)
+    } else {
+      toggleLabel.textContent = '🌙'; // Moon for light mode (to switch to dark)
+    }
+
+    // Toggle dark mode on change
+    toggle.addEventListener('change', () => {
+      if (toggle.checked) {
+        body.classList.add('dark-mode');
+        localStorage.setItem('darkMode', 'enabled');
+        toggleLabel.textContent = '☀️';
+      } else {
+        body.classList.remove('dark-mode');
+        localStorage.setItem('darkMode', 'disabled');
+        toggleLabel.textContent = '🌙';
+      }
+    });
+  </script>
+</body>
+</html>

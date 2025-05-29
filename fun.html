@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Work Hard Play Hard| CollegeTips Gallery</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Arial, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(180deg, #e6f0fa, #fefefe);
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(to right, #006699, #00cfff);
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    .header h1 {
+      color: white;
+      font-size: 2.5rem;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      margin: 0;
+      display: inline-block;
+    }
+
+    .header h1 span {
+      display: inline-block;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* Filters */
+    .filters {
+      text-align: center;
+      margin: 30px 0;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .filter-btn {
+      background: #0077b6;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: #005f8c;
+    }
+
+    /* Gallery */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+      flex-grow: 1;
+    }
+
+    .photo img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .photo img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Wave Footer */
+    .wave-footer {
+      position: relative;
+      width: 100%;
+      height: 150px;
+      overflow: hidden;
+      margin-top: auto;
+      z-index: 0;
+    }
+
+    .wave {
+      position: absolute;
+      bottom: 0;
+      width: 200%;
+      height: 100%;
+      background-repeat: repeat-x;
+      background-size: contain;
+      animation: waveMove linear infinite;
+    }
+
+    .wave1 {
+      background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg"><path fill="%23006699" d="M0,160 C150,200 350,120 500,160 C650,200 850,120 1200,160 L1200,300 L0,300 Z"/></svg>');
+      opacity: 0.5;
+      animation-duration: 30s;
+    }
+
+    .wave2 {
+      background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg"><path fill="%230099cc" d="M0,180 C200,230 300,100 500,150 C700,200 800,140 1200,180 L1200,300 L0,300 Z"/></svg>');
+      opacity: 0.6;
+      animation-duration: 20s;
+    }
+
+    .wave3 {
+      background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg"><path fill="%2300cfff" d="M0,200 C250,250 300,150 500,180 C700,210 750,150 1200,200 L1200,300 L0,300 Z"/></svg>');
+      opacity: 0.7;
+      animation-duration: 10s;
+    }
+
+    @keyframes waveMove {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    /* Lightbox */
+    .lightbox {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease;
+    }
+
+    .lightbox.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .lightbox-img {
+      max-width: 90%;
+      max-height: 80%;
+      border-radius: 10px;
+      transform: scale(1);
+      transition: transform 0.3s ease;
+    }
+
+    .close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 2rem;
+      color: white;
+      cursor: pointer;
+    }
+
+    .zoom-controls {
+      position: absolute;
+      bottom: 40px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .zoom-controls button {
+      background: white;
+      color: #333;
+      font-size: 1.5rem;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .zoom-controls button:hover {
+      background: #e6f0fa;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 2rem;
+      }
+
+      .filter-btn {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+      }
+
+      .gallery {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      }
+
+      .wave-footer {
+        height: 100px;
+      }
+
+      .wave {
+        height: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div class="header">
+    <h1>
+      <span></span> <span>W</span><span>O</span><span>R</span><span>K</span> <span>H</span><span>A</span><span>R</span><span>D</span> <span>P</span><span>L</span><span>A</span><span>Y</span> <span>H</span><span>A</span><span>R</span><span>D</span>
+    </h1>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters">
+    <button class="filter-btn active" data-category="fun">Work Hard Play Hard 🥳</button>
+    <a href="team.html" class="filter-btn">Team Vibes 🤝</a>
+    <a href="creative.html" class="filter-btn">Creative Campaigns 🎨</a>
+    <a href="bts.html" class="filter-btn">BTS 🎥</a>
+    <a href="Gallery.html" class="filter-btn">Back to Gallery 🖼️</a>
+    <a href="index.html" class="filter-btn">Back to Home 🏠</a>
+  </div>
+
+  <!-- Gallery -->
+  <div class="gallery">
+    <div class="photo fun"><img src="whph1.jpg.png" alt="Work Hard Play Hard"></div>
+    <div class="photo fun"><img src="whph2.jpg.png" alt="Work Hard Play Hard"></div>
+    <div class="photo fun"><img src="whph44.png" alt="Work Hard Play Hard"></div>
+    <div class="photo fun"><img src="whph66.png" alt="Work Hard Play Hard"></div>
+  </div>
+
+  <!-- Wave Footer -->
+  <div class="wave-footer">
+    <div class="wave wave1"></div>
+    <div class="wave wave2"></div>
+    <div class="wave wave3"></div>
+  </div>
+
+  <!-- Lightbox -->
+  <div id="lightbox" class="lightbox hidden">
+    <span class="close">×</span>
+    <img class="lightbox-img" src="" alt="Zoomed Image">
+    <div class="zoom-controls">
+      <button id="zoom-in">+</button>
+      <button id="zoom-out">-</button>
+    </div>
+  </div>
+
+  <script>
+    // Bouncing header animation
+    document.addEventListener("DOMContentLoaded", function () {
+      const heading = document.querySelector(".header h1");
+      const letters = heading.textContent.split("");
+      heading.innerHTML = letters
+        .map(
+          (letter, index) =>
+            `<span style="animation-delay: ${index * 0.1}s;">${letter}</span>`
+        )
+        .join("");
+    });
+
+    // Filter functionality
+    document.querySelectorAll('.filter-btn[data-category]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const category = btn.dataset.category;
+        document.querySelectorAll('.photo').forEach(photo => {
+          if (category === 'fun') {
+            photo.style.display = 'block';
+          } else {
+            photo.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Lightbox functionality
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.querySelector('.lightbox-img');
+    const closeBtn = document.querySelector('.close');
+    const zoomInBtn = document.getElementById('zoom-in');
+    const zoomOutBtn = document.getElementById('zoom-out');
+    let zoomLevel = 1;
+
+    document.querySelectorAll('.photo img').forEach(img => {
+      img.addEventListener('click', () => {
+        lightboxImg.src = img.src;
+        lightbox.classList.add('active');
+        zoomLevel = 1;
+        lightboxImg.style.transform = `scale(${zoomLevel})`;
+      });
+    });
+
+    closeBtn.addEventListener('click', () => {
+      lightbox.classList.remove('active');
+    });
+
+    zoomInBtn.addEventListener('click', () => {
+      zoomLevel = Math.min(zoomLevel + 0.2, 2);
+      lightboxImg.style.transform = `scale(${zoomLevel})`;
+    });
+
+    zoomOutBtn.addEventListener('click', () => {
+      zoomLevel = Math.max(zoomLevel - 0.2, 0.5);
+      lightboxImg.style.transform = `scale(${zoomLevel})`;
+    });
+
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) {
+        lightbox.classList.remove('active');
+      }
+    });
+  </script>
+</body>
+</html>

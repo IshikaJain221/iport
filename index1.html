@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CollegeTips Gallery</title>
+   <a href="index1.html">Home</a>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      font-family: 'Segoe UI', sans-serif;
+      position: relative;
+    }
+
+    /* Theme variables */
+    :root {
+      --background: #fefefe;
+      --text-color: #333;
+      --header-color: #004466;
+      --button-bg: #0077b6;
+      --button-hover: #005f8c;
+      --wave1-fill: #006699;
+      --wave2-fill: #0099cc;
+      --wave3-fill: #00cfff;
+    }
+
+    body.dark-mode {
+      --background: #2e2e2e;
+      --text-color: #e0e0e0;
+      --header-color: #66b2ff;
+      --button-bg: #004466;
+      --button-hover: #002244;
+      --wave1-fill: #003366;
+      --wave2-fill: #004466;
+      --wave3-fill: #006699;
+    }
+
+    body {
+      background: var(--background);
+      color: var(--text-color);
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .wave-container {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 100vh;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .wave {
+      position: absolute;
+      bottom: 0;
+      width: 200%;
+      height: 100%;
+      background-repeat: repeat-x;
+      background-size: contain;
+      animation: waveMove linear infinite;
+    }
+
+    .wave1 {
+      background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg"><path fill="%23006699" d="M0,160 C150,200 350,120 500,160 C650,200 850,120 1200,160 L1200,300 L0,300 Z"/></svg>');
+      opacity: 0.5;
+      animation-duration: 30s;
+    }
+
+    body.dark-mode .wave1 {
+      background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg"><path fill="%23003366" d="M0,160 C150,200 350,120 500,160 C650,200 850,120 1200,160 L1200,300 L0,300 Z"/></svg>');
+    }
+
+    .wave2 {
+      background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg"><path fill="%230099cc" d="M0,180 C200,230 300,100 500,150 C700,200 800,140 1200,180 L1200,300 L0,300 Z"/></svg>');
+      opacity: 0.6;
+      animation-duration: 20s;
+    }
+
+    body.dark-mode .wave2 {
+      background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg"><path fill="%23004466" d="M0,180 C200,230 300,100 500,150 C700,200 800,140 1200,180 L1200,300 L0,300 Z"/></svg>');
+    }
+
+    .wave3 {
+      background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg"><path fill="%2300cfff" d="M0,200 C250,250 300,150 500,180 C700,210 750,150 1200,200 L1200,300 L0,300 Z"/></svg>');
+      opacity: 0.7;
+      animation-duration: 10s;
+    }
+
+    body.dark-mode .wave3 {
+      background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg"><path fill="%23006699" d="M0,200 C250,250 300,150 500,180 C700,210 750,150 1200,200 L1200,300 L0,300 Z"/></svg>');
+    }
+
+    @keyframes waveMove {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    .content {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 120px 20px;
+    }
+
+    .content h1 {
+      font-size: 3rem;
+      color: var(--header-color);
+    }
+
+    .content p {
+      font-size: 1.2rem;
+      color: var(--text-color);
+      margin: 20px auto;
+    }
+
+    .explore-button {
+      margin-top: 30px;
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      background-color: var(--button-bg);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .explore-button:hover {
+      background-color: var(--button-hover);
+    }
+
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      z-index: 10000;
+      color: var(--text-color);
+      transition: transform 0.3s ease;
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.2);
+    }
+
+    @media (max-width: 768px) {
+      .theme-toggle {
+        font-size: 20px;
+        top: 15px;
+        right: 15px;
+      }
+      .content h1 {
+        font-size: 2rem;
+      }
+      .content p {
+        font-size: 1rem;
+      }
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+  </style>
+</head>
+<body>
+  <button class="theme-toggle" aria-label="Toggle theme">☀️</button>
+
+  <div class="content">
+    <h1 id="bouncy-heading">COLLEGE TIPS GALLERY</h1>
+    <p>Explore team vibes, campaigns, fun, and behind-the-scenes moments!</p>
+    <a class="explore-button" href="Gallery.html">Explore the Gallery!</a>
+  </div>
+
+  <div class="wave-container">
+    <div class="wave wave1"></div>
+    <div class="wave wave2"></div>
+    <div class="wave wave3"></div>
+  </div>
+
+  <div class="page-loader" id="pageLoader" style="display:none;">
+    <div class="wave">
+      <div></div><div></div><div></div><div></div><div></div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const heading = document.getElementById("bouncy-heading");
+      const letters = heading.textContent.split("");
+      heading.innerHTML = letters
+        .map(
+          (letter, index) =>
+            `<span style="display:inline-block; animation:bounce 2s infinite ${index * 0.1}s;">${letter}</span>`
+        )
+        .join("");
+
+      // Theme toggle
+      const toggleButton = document.querySelector('.theme-toggle');
+      const body = document.body;
+      if (localStorage.getItem('theme') === 'dark') {
+        body.classList.add('dark-mode');
+        toggleButton.textContent = '🌙';
+      } else {
+        toggleButton.textContent = '☀️';
+      }
+      toggleButton.addEventListener('click', () => {
+        body.classList.toggle('dark-mode');
+        if (body.classList.contains('dark-mode')) {
+          toggleButton.textContent = '🌙';
+          localStorage.setItem('theme', 'dark');
+        } else {
+          toggleButton.textContent = '☀️';
+          localStorage.setItem('theme', 'light');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
