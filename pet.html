@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pet-Friendly City Campaign</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(180deg, #ffffff 0%, #ff69b4 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Custom Scrollbar with Big Kitten Paws */
+        ::-webkit-scrollbar {
+            width: 20px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #ffb6c1;
+            border-radius: 12px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #ffffff;
+            border-radius: 12px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><text x="2" y="18" font-size="18" fill="%23ff69b4">🐾</text></svg>');
+            background-repeat: repeat-y;
+            background-size: 20px 20px;
+            border: 3px solid #ffb6c1;
+            box-shadow: 0 2px 5px rgba(248, 255, 185, 0.3);
+        }
+
+        /* Particle Background */
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Navigation */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            background: rgba(0, 0, 0, 0.5);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            transition: background 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            background: rgba(255, 105, 180, 0.9);
+            color: #ffffff;
+        }
+
+        .navbar a {
+            color: #ffffff;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1.3em;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        .navbar.scrolled a {
+            color: #ffffff;
+        }
+
+        .navbar a:hover {
+            transform: translateY(-3px);
+            color: #ffeb3b;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.8));
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 6em;
+            font-weight: 800;
+            text-shadow: 4px 4px 10px rgba(0, 0, 0, 0.7);
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero .pet-emoji {
+            font-size: 5em;
+            margin-top: 20px;
+            transform-style: preserve-3d;
+            transition: transform 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero .cta-button {
+            background: #ffeb3b;
+            color: #ff69b4;
+            padding: 20px 60px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 2.2em;
+            font-weight: 600;
+            position: relative;
+            z-index: 2;
+            transform-style: preserve-3d;
+            transition: transform 0.3s ease;
+        }
+
+        .hero .cta-button:hover {
+            transform: rotateX(20deg) scale(1.3);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Floating Volunteer Button */
+        .floating-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #ffeb3b;
+            color: #ff69b4;
+            padding: 15px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 1.2em;
+            z-index: 100;
+            animation: pulse 2s infinite ease-in-out;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .floating-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Paw Divider */
+        .paw-divider {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            padding: 50px 0;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .paw {
+            font-size: 3.5em;
+            animation: bounce 1.5s infinite ease-in-out;
+        }
+
+        .paw:nth-child(2) { animation-delay: 0.2s; }
+        .paw:nth-child(3) { animation-delay: 0.4s; }
+        .paw:nth-child(4) { animation-delay: 0.6s; }
+
+        /* Volunteer Form */
+        .volunteer {
+            padding: 120px 20px;
+            text-align: center;
+        }
+
+        .volunteer h2 {
+            font-size: 4em;
+            margin-bottom: 40px;
+        }
+
+        .volunteer form {
+            display: flex;
+            flex-direction: column;
+            max-width: 700px;
+            margin: 0 auto;
+            gap: 30px;
+        }
+
+        .volunteer input, .volunteer select {
+            padding: 20px;
+            border: none;
+            border-radius: 20px;
+            font-size: 1.3em;
+            background: #fff;
+            color: #333;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .volunteer input:focus, .volunteer select:focus {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px #ffeb3b;
+            outline: none;
+        }
+
+        .volunteer button {
+            background: #ffeb3b;
+            color: #ff69b4;
+            padding: 20px;
+            border: none;
+            border-radius: 20px;
+            font-size: 1.5em;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 0.3s ease;
+        }
+
+        .volunteer button:hover {
+            transform: rotateX(20deg) scale(1.2);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Map Section */
+        .map-section {
+            padding: 120px 20px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .map-section h2 {
+            font-size: 4em;
+            margin-bottom: 40px;
+        }
+
+        .map-svg {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .map-pin {
+            fill: #ffeb3b;
+            cursor: pointer;
+            transition: transform 0.3s ease, fill 0.3s ease;
+        }
+
+        .map-pin:hover {
+            transform: scale(1.5);
+            fill: #ff69b4;
+        }
+
+        /* Impact Stories */
+        .impact {
+            padding: 150px 20px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.4);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .impact h2 {
+            font-size: 5em;
+            margin-bottom: 60px;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .story-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 50px;
+            padding: 0 40px;
+        }
+
+        .story {
+            perspective: 1000px;
+            position: relative;
+            background: #fff;
+            color: #333;
+            padding: 40px;
+            border-radius: 25px;
+            transform-style: preserve-3d;
+            transition: transform 0.8s ease;
+            min-height: 400px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .story .front, .story .back {
+            backface-visibility: hidden;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .story .back {
+            transform: rotateY(180deg);
+            background: #ffeb3b;
+            color: #ff69b4;
+            border-radius: 25px;
+            font-size: 1.5em;
+        }
+
+        .story:hover {
+            transform: rotateY(180deg);
+        }
+
+        .story h3 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .story p {
+            font-size: 1.3em;
+        }
+
+        .progress-bar {
+            background: #ccc;
+            height: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .progress {
+            background: #ffeb3b;
+            height: 100%;
+            width: 0;
+            transition: width 1.5s ease-in-out;
+        }
+
+        .story.visible .progress {
+            width: 80%;
+        }
+
+        .story:nth-child(2).visible .progress {
+            width: 65%;
+        }
+
+        .story:nth-child(3).visible .progress {
+            width: 90%;
+        }
+
+        /* Pet Adoption Carousel */
+        .adoption {
+            padding: 150px 20px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.4);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .adoption h2 {
+            font-size: 5em;
+            margin-bottom: 60px;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .carousel {
+            display: flex;
+            gap: 50px;
+            padding: 40px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            justify-content: center;
+        }
+
+        .pet-card {
+            perspective: 1000px;
+            position: relative;
+            min-width: 400px;
+            background: #fff;
+            color: #333;
+            border-radius: 25px;
+            padding: 40px;
+            text-align: center;
+            transform-style: preserve-3d;
+            transition: transform 0.8s ease;
+            min-height: 500px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            cursor: move;
+        }
+
+        .pet-card .front, .pet-card .back {
+            backface-visibility: hidden;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .pet-card .back {
+            transform: rotateY(180deg);
+            background: #ffeb3b;
+            color: #ff69b4;
+            border-radius: 25px;
+            font-size: 1.3em;
+        }
+
+        .pet-card:hover {
+            transform: rotateY(180deg);
+        }
+
+        .pet-card img {
+            width: 100%;
+            max-height: 250px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .pet-card h3 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+
+        .pet-card p {
+            font-size: 1.3em;
+            margin-bottom: 20px;
+        }
+
+        .pet-card button {
+            background: #ffeb3b;
+            color: #ff69b4;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 1.5em;
+            transition: transform 0.3s ease;
+        }
+
+        .pet-card button:hover {
+            transform: scale(1.2);
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-50px) rotate(180deg); }
+            100% { transform: translateY(0) rotate(360deg); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 3.5em;
+            }
+
+            .hero .pet-emoji {
+                font-size: 3em;
+            }
+
+            .navbar {
+                flex-direction: column;
+                padding: 10px;
+            }
+
+            .navbar a {
+                margin: 5px 0;
+            }
+
+            .paw {
+                font-size: 2.5em;
+            }
+
+            .story-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .story, .pet-card {
+                min-width: 300px;
+                min-height: 350px;
+            }
+
+            .story h3, .pet-card h3 {
+                font-size: 2em;
+            }
+
+            .map-svg {
+                max-width: 100%;
+            }
+
+            ::-webkit-scrollbar {
+                width: 16px;
+            }
+
+            ::-webkit-scrollbar-thumb {
+                background-size: 16px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Particle Background -->
+    <canvas id="particles"></canvas>
+
+    <!-- Navigation -->
+    <nav class="navbar" data-aos="fade-down">
+        <div class="logo">🐾 Pet-Friendly City</div>
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+            <a href="#volunteer">Volunteer</a>
+            <a href="#map">Map</a>
+            <a href="#impact">Impact Stories</a>
+            <a href="#adoption">Adoption</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home" data-aos="fade-in">
+        <video autoplay muted loop playsinline>
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-puppy-running-in-a-park-1498-large.mp4" type="video/mp4">
+            <img src="https://via.placeholder.com/1920x1080?text=Pet+City" alt="Fallback Pet City">
+        </video>
+        <h1 id="typewriter" data-aos="zoom-in"></h1>
+        <div class="pet-emoji" data-aos="zoom-in" data-aos-delay="200">🐾</div>
+        <a href="#volunteer" class="cta-button" data-aos="zoom-in" data-aos-delay="400">Join the Movement 🐾</a>
+    </section>
+
+    <!-- Floating Volunteer Button -->
+    <a href="#volunteer" class="floating-btn">Volunteer Now 🐾</a>
+
+    <!-- Paw Divider -->
+    <div class="paw-divider" data-aos="fade-up">
+        <span class="paw">🐾</span>
+        <span class="paw">🐾</span>
+        <span class="paw">🐾</span>
+        <span class="paw">🐾</span>
+    </div>
+
+    <!-- Volunteer Form -->
+    <section class="volunteer" id="volunteer" data-aos="fade-up">
+        <h2>Become a Volunteer! 🐱</h2>
+        <form id="volunteer-form">
+            <input type="text" placeholder="Name" required>
+            <input type="text" placeholder="City" required>
+            <select required>
+                <option value="" disabled selected>Role Preference</option>
+                <option value="organizer">Event Organizer</option>
+                <option value="caretaker">Pet Caretaker</option>
+                <option value="advocate">Campaign Advocate</option>
+            </select>
+            <button type="submit">Sign Up 🐾</button>
+        </form>
+    </section>
+
+    <!-- Paw Divider -->
+    <div class="paw-divider" data-aos="fade-up">
+        <span class="paw">🐾</span>
+        <span class="paw">🐾</span>
+        <span class="paw">🐾</span>
+        <span class="paw">🐾</span>
+    </div>
+
+    <!-- Map Section -->
+    <section class="map-section" id="map" data-aos="fade-up">
+        <h2>Pet-Friendly Cities 🐾🌆</h2>
+        <svg class="map-svg" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0" y="0" width="800" height="400" fill="#ff69b4"/>
+            <circle class="map-pin" cx="200" cy="100" r="10" data-city="Mumbai"/>
+            <circle class="map-pin" cx="400" cy="200" r="10" data-city="Delhi"/>
+            <circle class="map-pin" cx="600" cy="150" r="10" data-city="Bangalore"/>
+            <text x="210" y="95" fill="#ffeb3b" font-size="14" opacity="0" class="pin-label">Mumbai</text>
+            <text x="410" y="195" fill="#ffeb3b" font-size="14" opacity="0" class="pin-label">Delhi</text>
+            <text x="610" y="145" fill="#ffeb3b" font-size="14" opacity="0" class="pin-label">Bangalore</text>
+        </svg>
+    </section>
+
+    <!-- Paw Divider -->
+    <div class="paw-divider" data-aos="fade-up">
+        <span class="paw">🐾</span>
+        <span class="paw">🐾</span>
+        <span class="paw">🐾</span>
+        <span class="paw">🐾</span>
+    </div>
+
+    <!-- Impact Stories -->
+    <section class="impact" id="impact" data-aos="fade-up">
+        <h2>Impact Stories 🐾❤️</h2>
+        <div class="story-grid">
+            <div class="story" data-aos="flip-left">
+                <div class="front">
+                    <h3>Saving Max</h3>
+                    <p>Max, a stray pup, found a forever home thanks to our dedicated volunteers! 🐶</p>
+                    <div class="progress-bar"><div class="progress"></div></div>
+                </div>
+                <div class="back">80% of strays rehomed in 2024!</div>
+            </div>
+            <div class="story" data-aos="flip-left" data-aos-delay="100">
+                <div class="front">
+                    <h3>Community Clean-Up</h3>
+                    <p>50 volunteers transformed parks in Mumbai into pet-friendly spaces! 🌳</p>
+                    <div class="progress-bar"><div class="progress"></div></div>
+                </div>
+                <div class="back">65% of parks now pet-friendly!</div>
+            </div>
+            <div class="story" data-aos="flip-left" data-aos-delay="200">
+                <div class="front">
+                    <h3>Adoption Drive</h3>
+                    <p>20 pets found loving homes in our last adoption event! 🐱</p>
+                    <div class="progress-bar"><div class="progress"></div></div>
+                </div>
+                <div class="back">90% adoption success rate!</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Paw Divider -->
+    <div class="paw-divider" data-aos="fade-up">
+        <span class="paw">🐾</span>
+        <span class="paw">🐾</span>
+        <span class="paw">🐾</span>
+        <span class="paw">🐾</span>
+    </div>
+
+    <!-- Pet Adoption Carousel -->
+    <section class="adoption" id="adoption" data-aos="fade-up">
+        <h2>Meet Our Adoptable Pets! 🐶🐱</h2>
+        <div class="carousel">
+            <div class="pet-card" data-aos="zoom-in" draggable="true">
+                <div class="front">
+                    <img src="dog1.png" alt="Pet 1">
+                    <h3>Buddy</h3>
+                    <p>Playful pup looking for love! 🐾</p>
+                    <button class="adopt-btn">Adopt Me!</button>
+                </div>
+                <div class="back">
+                    <h3>Buddy's Bio</h3>
+                    <p>Age: 2 years<br>Breed: Labrador<br>Loves: Fetch & cuddles<br>Personality: Energetic and friendly</p>
+                </div>
+            </div>
+            <div class="pet-card" data-aos="zoom-in" data-aos-delay="100" draggable="true">
+                <div class="front">
+                    <img src="kitten.png" alt="Pet 2">
+                    <h3>Whiskers</h3>
+                    <p>Cuddly cat ready for a home! 😺</p>
+                    <button class="adopt-btn">Adopt Me!</button>
+                </div>
+                <div class="back">
+                    <h3>Whiskers' Bio</h3>
+                    <p>Age: 1 year<br>Breed: Domestic Shorthair<br>Loves: Napping & toys<br>Personality: Sweet and curious</p>
+                </div>
+            </div>
+            <div class="pet-card" data-aos="zoom-in" data-aos-delay="200" draggable="true">
+                <div class="front">
+                    <img src="dog3.png" alt="Pet 3">
+                    <h3>Rex</h3>
+                    <p>Loyal dog seeking adventure! 🐶</p>
+                    <button class="adopt-btn">Adopt Me!</button>
+                </div>
+                <div class="back">
+                    <h3>Rex's Bio</h3>
+                    <p>Age: 3 years<br>Breed: German Shepherd<br>Loves: Running & treats<br>Personality: Brave and loyal</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({ duration: 1200, once: true });
+
+        // Typewriter Effect for Hero Slogan
+        const slogans = ["Making Cities Paw-some! 🐶✨", "Adopt Today! 🐾", "Join the Pet Revolution! 🐱"];
+        let sloganIndex = 0;
+        let charIndex = 0;
+        const typewriter = document.getElementById('typewriter');
+        function type() {
+            if (charIndex < slogans[sloganIndex].length) {
+                typewriter.textContent += slogans[sloganIndex].charAt(charIndex);
+                charIndex++;
+                setTimeout(type, 100);
+            } else {
+                setTimeout(() => {
+                    typewriter.textContent = '';
+                    charIndex = 0;
+                    sloganIndex = (sloganIndex + 1) % slogans.length;
+                    type();
+                }, 2000);
+            }
+        }
+        type();
+
+        // Three.js Particle Background
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('particles'), alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        camera.position.z = 50;
+
+        const particles = new THREE.Group();
+        for (let i = 0; i < 50; i++) {
+            const geometry = new THREE.SphereGeometry(0.5, 16, 16);
+            const material = new THREE.MeshBasicMaterial({ color: 0xffeb3b });
+            const particle = new THREE.Mesh(geometry, material);
+            particle.position.set(
+                (Math.random() - 0.5) * 100,
+                (Math.random() - 0.5) * 100,
+                (Math.random() - 0.5) * 50
+            );
+            particles.add(particle);
+        }
+        scene.add(particles);
+
+        function animateParticles() {
+            particles.rotation.y += 0.002;
+            particles.children.forEach(p => {
+                p.position.y += Math.sin(Date.now() * 0.001 + p.position.x) * 0.05;
+            });
+            renderer.render(scene, camera);
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        document.addEventListener('click', (e) => {
+            const burst = new THREE.Group();
+            for (let i = 0; i < 10; i++) {
+                const geometry = new THREE.SphereGeometry(0.3, 16, 16);
+                const material = new THREE.MeshBasicMaterial({ color: 0xffeb3b });
+                const particle = new THREE.Mesh(geometry, material);
+                particle.position.set(
+                    (e.clientX / window.innerWidth - 0.5) * 50,
+                    (e.clientY / window.innerHeight - 0.5) * -50,
+                    0
+                );
+                particle.velocity = new THREE.Vector3(
+                    (Math.random() - 0.5) * 5,
+                    (Math.random() - 0.5) * 5,
+                    (Math.random() - 0.5) * 5
+                );
+                burst.add(particle);
+            }
+            scene.add(burst);
+            setTimeout(() => scene.remove(burst), 1000);
+        });
+
+        // Sticky Navbar Scroll Effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            navbar.classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // Pet Emoji Mouse Interaction
+        const petEmoji = document.querySelector('.pet-emoji');
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth - 0.5) * 30;
+            const y = (e.clientY / window.innerHeight - 0.5) * 30;
+            gsap.to(petEmoji, {
+                rotationX: -y,
+                rotationY: x,
+                duration: 0.5,
+                ease: 'power2.out'
+            });
+        });
+
+        // Form Validation
+        const form = document.getElementById('volunteer-form');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Thank you for signing up! 🐾 We’ll get in touch soon!');
+            form.reset();
+        });
+
+        // Map Pin Interaction
+        document.querySelectorAll('.map-pin').forEach(pin => {
+            pin.addEventListener('mouseover', () => {
+                const label = document.querySelector(`.pin-label[x="${pin.getAttribute('cx') * 1 + 10}"][y="${pin.getAttribute('cy') * 1 - 5}"]`);
+                gsap.to(label, { opacity: 1, duration: 0.3 });
+            });
+            pin.addEventListener('mouseout', () => {
+                const label = document.querySelector(`.pin-label[x="${pin.getAttribute('cx') * 1 + 10}"][y="${pin.getAttribute('cy') * 1 - 5}"]`);
+                gsap.to(label, { opacity: 0, duration: 0.3 });
+            });
+        });
+
+        // Progress Bar Animation on Scroll
+        const stories = document.querySelectorAll('.story');
+        const storyObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    storyObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+        stories.forEach(story => storyObserver.observe(story));
+
+        // Drag-and-Drop Carousel
+        interact('.pet-card').draggable({
+            inertia: true,
+            modifiers: [
+                interact.modifiers.restrictRect({
+                    restriction: 'parent',
+                    endOnly: true
+                })
+            ],
+            listeners: {
+                move: (event) => {
+                    const target = event.target;
+                    const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+                    target.style.transform = `translateX(${x}px)`;
+                    target.setAttribute('data-x', x);
+                }
+            }
+        });
+
+        // Confetti and Sound on Adopt Button
+        document.querySelectorAll('.adopt-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                confetti({
+                    particleCount: 300,
+                    spread: 100,
+                    origin: { y: 0.6 },
+                    colors: ['#ffeb3b', '#ff69b4']
+                });
+                const audio = new Audio('https://cdn.pixabay.com/audio/2022/03/10/audio_5d4e8b4e9b.mp3');
+                audio.play();
+                alert('Woof! You’re interested in adopting! 🐾💖 We’ll contact you!');
+            });
+        });
+    </script>
+</body>
+</html>
